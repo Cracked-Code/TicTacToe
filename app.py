@@ -3,7 +3,7 @@ from game import TicTacToe
 
 app = Flask(__name__)
 game = TicTacToe()
-print(game.won())
+
 @app.route("/")
 def home():
     return render_template("index.html")  # serves frontend
@@ -17,7 +17,13 @@ def make_move():
     data = request.json
     row = data.get("row")
     col = data.get("col")
-    return jsonify(game.make_move(row, col))
+    game.make_move(row, col)
+    return jsonify(game.get_state())
+
+@app.route("/ai_move", methods=["POST"])    
+def ai_move():
+    game.ai_move()
+    return jsonify(game.get_state())    
 
 @app.route("/reset", methods=["POST"])
 def reset_game():
